@@ -5,7 +5,6 @@ from typing import Iterable
 
 import soundfile as sf
 from datasets import load_dataset
-from datasets.exceptions import DatasetNotFoundError
 
 
 def _infer_field(sample: dict, candidates: Iterable[str]) -> str:
@@ -36,7 +35,7 @@ def _write_audio(audio, out_path: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dataset", type=str, default="tarteel-ai/everyayah", help="HF dataset name")
+    ap.add_argument("--dataset", type=str, required=True, help="HF dataset name, e.g. everyayah/recitations")
     ap.add_argument("--config", type=str, default=None, help="Optional dataset config name")
     ap.add_argument("--split", type=str, default="train")
     ap.add_argument("--limit", type=int, default=8)
@@ -47,18 +46,7 @@ def main() -> None:
     ap.add_argument("--text_field", type=str, default="text")
     args = ap.parse_args()
 
-    try:
-        ds = load_dataset(args.dataset, args.config, split=args.split)
-    except DatasetNotFoundError as exc:
-        raise SystemExit(
-            "Dataset not found on the Hugging Face Hub. "
-            "Double-check the dataset name/config or search with:\n"
-            "  python - <<'PY'\n"
-            "  from datasets import list_datasets\n"
-            "  print([d for d in list_datasets() if 'everyayah' in d.lower()])\n"
-            "  PY\n"
-            f"Requested dataset: {args.dataset}"
-        ) from exc
+    ds = load_dataset(args.dataset, args.config, split=args.split)
     if args.seed is not None:
         ds = ds.shuffle(seed=args.seed)
 

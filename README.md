@@ -12,13 +12,11 @@ No API / frontend included.
 1. Download a tiny subset and build an ASR manifest:
    ```bash
    python scripts/download_everyayah_subset.py \
-     --dataset everyayah/recitations \
-     --config ar \
+     --dataset <HF_DATASET_NAME> \
+     --config <OPTIONAL_CONFIG> \
      --split train \
      --limit 8
    ```
-   - Replace the dataset/config values if you want a different EveryAyah variant.
-   - Do **not** include angle brackets in your command; they are placeholders.
 2. Split into train/dev:
    ```bash
    python scripts/make_splits.py --in_manifest data/processed/everyayah_subset.jsonl

@@ -1,0 +1,74 @@
+digraph ASRArchitecture {
+    rankdir=TB;
+    nodesep=0.5;
+    ranksep=0.6;
+    
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    
+    // Input
+    IN [label="Audio Input\n(Waveform)", shape=cylinder, fillcolor="#FFE5B4"];
+    SPEC [label="Mel-Spectrogram\n(80 bins × T frames)", fillcolor="#E0FFFF"];
+    
+    // CNN Layers
+    subgraph cluster_cnn {
+        label="Convolutional Layers";
+        style=filled;
+        color="#E6F2FF";
+        
+        CNN1 [label="Conv2D Layer 1\n(32 filters, 3×3)\nReLU + BatchNorm", fillcolor="#B0E0E6"];
+        POOL1 [label="MaxPooling2D\n(2×2)", fillcolor="#ADD8E6"];
+        CNN2 [label="Conv2D Layer 2\n(64 filters, 3×3)\nReLU + BatchNorm", fillcolor="#B0E0E6"];
+        POOL2 [label="MaxPooling2D\n(2×2)", fillcolor="#ADD8E6"];
+        CNN3 [label="Conv2D Layer 3\n(128 filters, 3×3)\nReLU + BatchNorm", fillcolor="#B0E0E6"];
+    }
+    
+    // Reshape
+    RESHAPE [label="Reshape to\nSequence Format\n(T × Features)", fillcolor="#FFE4E1"];
+    
+    // LSTM Layers
+    subgraph cluster_lstm {
+        label="Recurrent Layers";
+        style=filled;
+        color="#FFF0F5";
+        
+        LSTM1 [label="BiLSTM Layer 1\n(256 units)\nDropout: 0.3", fillcolor="#FFB6C1"];
+        LSTM2 [label="BiLSTM Layer 2\n(256 units)\nDropout: 0.3", fillcolor="#FFB6C1"];
+        LSTM3 [label="BiLSTM Layer 3\n(256 units)\nDropout: 0.3", fillcolor="#FFB6C1"];
+    }
+    
+    // Attention
+    ATT [label="Attention Mechanism\n(Multi-Head)", fillcolor="#DDA0DD"];
+    
+    // Output Layers
+    subgraph cluster_output {
+        label="Output Processing";
+        style=filled;
+        color="#F0E68C";
+        
+        DENSE [label="Dense Layer\n(512 units)\nReLU", fillcolor="#FFFFE0"];
+        SOFTMAX [label="Softmax Layer\n(Arabic chars + space)", fillcolor="#FFFFE0"];
+    }
+    
+    // CTC Loss
+    CTC [label="CTC Loss\n(Sequence Alignment)", fillcolor="#FF6B6B", fontcolor=white];
+    
+    // Final Output
+    OUT [label="Arabic Text\nTranscription", shape=cylinder, fillcolor="#90EE90"];
+    
+    // Connections
+    IN -> SPEC;
+    SPEC -> CNN1;
+    CNN1 -> POOL1;
+    POOL1 -> CNN2;
+    CNN2 -> POOL2;
+    POOL2 -> CNN3;
+    CNN3 -> RESHAPE;
+    RESHAPE -> LSTM1;
+    LSTM1 -> LSTM2;
+    LSTM2 -> LSTM3;
+    LSTM3 -> ATT;
+    ATT -> DENSE;
+    DENSE -> SOFTMAX;
+    SOFTMAX -> CTC [label="Training"];
+    SOFTMAX -> OUT [label="Inference"];
+}

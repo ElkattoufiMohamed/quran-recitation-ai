@@ -1,0 +1,69 @@
+digraph SystemArchitecture {
+    rankdir=TB;
+    splines=ortho;
+    nodesep=0.8;
+    ranksep=1.0;
+    
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
+    
+    // User Interface Layer
+    UI [label="User Interface\n(Mobile/Web App)", fillcolor="#FFE5B4"];
+    
+    // API Gateway
+    API [label="API Gateway\n(FastAPI/Flask)", fillcolor="#E6E6FA"];
+    
+    // Core Processing Components
+    subgraph cluster_core {
+        label="Core Processing Layer";
+        style=filled;
+        color=lightgrey;
+        
+        ASR [label="Speech Recognition\nModule", fillcolor="#98FB98"];
+        TAJ [label="Tajweed Verification\nModule", fillcolor="#98FB98"];
+        MAK [label="Makhraj Analysis\nModule", fillcolor="#98FB98"];
+        ERR [label="Error Detection &\nCorrection Module", fillcolor="#98FB98"];
+    }
+    
+    // Model Layer
+    subgraph cluster_models {
+        label="AI Models Layer";
+        style=filled;
+        color="#F0F0F0";
+        
+        M1 [label="CNN-LSTM-CTC\nASR Model", fillcolor="#FFB6C1"];
+        M2 [label="EfficientNet\nTajweed Classifier", fillcolor="#FFB6C1"];
+        M3 [label="LSTM\nMakhraj Detector", fillcolor="#FFB6C1"];
+    }
+    
+    // Data Layer
+    subgraph cluster_data {
+        label="Data & Storage Layer";
+        style=filled;
+        color="#FFFACD";
+        
+        DB [label="User Database\n(PostgreSQL)", fillcolor="#DDA0DD"];
+        STORE [label="Audio Storage\n(S3/Cloud)", fillcolor="#DDA0DD"];
+        REF [label="Reference Audio\nLibrary", fillcolor="#DDA0DD"];
+    }
+    
+    // Connections
+    UI -> API [label="Audio Input"];
+    API -> ASR;
+    API -> TAJ;
+    API -> MAK;
+    
+    ASR -> M1;
+    TAJ -> M2;
+    MAK -> M3;
+    
+    M1 -> ERR [label="Transcription"];
+    M2 -> ERR [label="Rule Violations"];
+    M3 -> ERR [label="Pronunciation Errors"];
+    
+    ERR -> API [label="Feedback"];
+    API -> UI [label="Results"];
+    
+    API -> DB [label="User Data", style=dashed];
+    API -> STORE [label="Audio Files", style=dashed];
+    ERR -> REF [label="Reference\nComparison", style=dashed];
+}

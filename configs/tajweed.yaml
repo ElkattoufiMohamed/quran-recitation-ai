@@ -1,0 +1,19 @@
+seed: 1337
+sample_rate: 16000
+n_mels: 80
+
+model:
+  base_channels: 64
+  dropout: 0.2
+
+train:
+  batch_size: 32
+  lr: 0.001
+  max_epochs: 30
+
+rules:
+  - madd
+  - ghunnah
+  - qalqalah
+  - idgham
+  - ikhfa

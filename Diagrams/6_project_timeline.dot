@@ -1,0 +1,101 @@
+igraph ProjectTimeline {
+    rankdir=TB;
+    nodesep=0.8;
+    ranksep=0.5;
+    
+    node [shape=box, style="filled,rounded", fontname="Arial", fontsize=10];
+    
+    // Start
+    START [label="Project Start", shape=ellipse, fillcolor="#90EE90"];
+    
+    // Phase 1
+    subgraph cluster_p1 {
+        label="Phase 1: Research & Data (Weeks 1-3)";
+        style=filled;
+        color="#E0FFFF";
+        
+        P1_1 [label="Dataset Collection\n(QDAT, Ar-DAD)", fillcolor="#B0E0E6"];
+        P1_2 [label="Literature Review", fillcolor="#B0E0E6"];
+        P1_3 [label="Data Preprocessing\n& Augmentation", fillcolor="#B0E0E6"];
+        P1_4 [label="Tajweed Expert\nConsultation", fillcolor="#B0E0E6"];
+    }
+    
+    // Phase 2
+    subgraph cluster_p2 {
+        label="Phase 2: Model Development (Weeks 4-10)";
+        style=filled;
+        color="#FFF0F5";
+        
+        P2_1 [label="ASR Model\nTraining", fillcolor="#FFB6C1"];
+        P2_2 [label="Tajweed Classifier\nTraining", fillcolor="#FFB6C1"];
+        P2_3 [label="Makhraj Detector\nTraining", fillcolor="#FFB6C1"];
+        P2_4 [label="Model Evaluation\n& Tuning", fillcolor="#FFB6C1"];
+    }
+    
+    // Phase 3
+    subgraph cluster_p3 {
+        label="Phase 3: System Integration (Weeks 11-13)";
+        style=filled;
+        color="#F0E68C";
+        
+        P3_1 [label="Pipeline Integration", fillcolor="#FFFFE0"];
+        P3_2 [label="API Development", fillcolor="#FFFFE0"];
+        P3_3 [label="Error Detection\nModule", fillcolor="#FFFFE0"];
+        P3_4 [label="Feedback System", fillcolor="#FFFFE0"];
+    }
+    
+    // Phase 4
+    subgraph cluster_p4 {
+        label="Phase 4: Application Dev (Weeks 14-16)";
+        style=filled;
+        color="#DDA0DD";
+        
+        P4_1 [label="Frontend\nDevelopment", fillcolor="#EE82EE"];
+        P4_2 [label="Backend\nIntegration", fillcolor="#EE82EE"];
+        P4_3 [label="Database Setup", fillcolor="#EE82EE"];
+        P4_4 [label="UI/UX Design", fillcolor="#EE82EE"];
+    }
+    
+    // Phase 5
+    subgraph cluster_p5 {
+        label="Phase 5: Testing & Deploy (Weeks 17-18)";
+        style=filled;
+        color="#FFE5B4";
+        
+        P5_1 [label="Unit Testing", fillcolor="#FFDAB9"];
+        P5_2 [label="User Beta Testing", fillcolor="#FFDAB9"];
+        P5_3 [label="Performance\nOptimization", fillcolor="#FFDAB9"];
+        P5_4 [label="Deployment", fillcolor="#FFDAB9"];
+    }
+    
+    // End
+    END [label="Project Complete\n(MVP Ready)", shape=ellipse, fillcolor="#90EE90"];
+    
+    // Sequential flow
+    START -> P1_1;
+    P1_1 -> P1_2;
+    P1_2 -> P1_3;
+    P1_3 -> P1_4;
+    
+    P1_4 -> P2_1;
+    P2_1 -> P2_2;
+    P2_2 -> P2_3;
+    P2_3 -> P2_4;
+    
+    P2_4 -> P3_1;
+    P3_1 -> P3_2;
+    P3_2 -> P3_3;
+    P3_3 -> P3_4;
+    
+    P3_4 -> P4_1;
+    P4_1 -> P4_2;
+    P4_2 -> P4_3;
+    P4_3 -> P4_4;
+    
+    P4_4 -> P5_1;
+    P5_1 -> P5_2;
+    P5_2 -> P5_3;
+    P5_3 -> P5_4;
+    
+    P5_4 -> END;
+}

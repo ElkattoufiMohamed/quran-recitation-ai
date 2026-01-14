@@ -1,0 +1,93 @@
+digraph ErrorWorkflow {
+    rankdir=TB;
+    nodesep=0.6;
+    ranksep=0.7;
+    
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    
+    INPUT [label="User Recitation\n+ AI Analysis Results", fillcolor="#FFE5B4"];
+    
+    // Error Detection
+    subgraph cluster_detect {
+        label="Error Detection";
+        style=filled;
+        color="#E0FFFF";
+        
+        D1 [label="Compare Transcription\nwith Quran Text", fillcolor="#B0E0E6"];
+        D2 [label="Check Tajweed\nRule Violations", fillcolor="#B0E0E6"];
+        D3 [label="Verify Makhraj\nPoints", fillcolor="#B0E0E6"];
+        D4 [label="Analyze Prosody\n(Pitch, Duration)", fillcolor="#B0E0E6"];
+    }
+    
+    // Error Classification
+    subgraph cluster_classify {
+        label="Error Classification";
+        style=filled;
+        color="#FFF0F5";
+        
+        C1 [label="Word-Level\nErrors", fillcolor="#FFE4E1"];
+        C2 [label="Tajweed Rule\nErrors", fillcolor="#FFE4E1"];
+        C3 [label="Pronunciation\nErrors", fillcolor="#FFE4E1"];
+        C4 [label="Timing/Rhythm\nErrors", fillcolor="#FFE4E1"];
+    }
+    
+    // Error Severity
+    SEV [label="Assign Severity\nLevels", shape=diamond, fillcolor="#DDA0DD"];
+    
+    // Correction Generation
+    subgraph cluster_correct {
+        label="Correction Generation";
+        style=filled;
+        color="#F0E68C";
+        
+        COR1 [label="Retrieve Correct\nArabic Text", fillcolor="#FFFFE0"];
+        COR2 [label="Find Reference\nAudio Clip", fillcolor="#FFFFE0"];
+        COR3 [label="Generate Visual\nComparison", fillcolor="#FFFFE0"];
+        COR4 [label="Provide Practice\nExercises", fillcolor="#FFFFE0"];
+    }
+    
+    // Feedback
+    subgraph cluster_feedback {
+        label="User Feedback";
+        style=filled;
+        color="#FFB6C1";
+        
+        F1 [label="Error Location\n(Timestamp)", fillcolor="#FFC0CB"];
+        F2 [label="Error Description\n(What went wrong)", fillcolor="#FFC0CB"];
+        F3 [label="Correct Form\n(Audio + Visual)", fillcolor="#FFC0CB"];
+        F4 [label="Improvement Tips", fillcolor="#FFC0CB"];
+    }
+    
+    OUTPUT [label="Comprehensive\nFeedback Report", fillcolor="#90EE90"];
+    
+    // Connections
+    INPUT -> D1;
+    INPUT -> D2;
+    INPUT -> D3;
+    INPUT -> D4;
+    
+    D1 -> C1;
+    D2 -> C2;
+    D3 -> C3;
+    D4 -> C4;
+    
+    C1 -> SEV;
+    C2 -> SEV;
+    C3 -> SEV;
+    C4 -> SEV;
+    
+    SEV -> COR1 [label="Critical"];
+    SEV -> COR2 [label="Major"];
+    SEV -> COR3 [label="Minor"];
+    SEV -> COR4 [label="All"];
+    
+    COR1 -> F1;
+    COR2 -> F2;
+    COR3 -> F3;
+    COR4 -> F4;
+    
+    F1 -> OUTPUT;
+    F2 -> OUTPUT;
+    F3 -> OUTPUT;
+    F4 -> OUTPUT;
+}

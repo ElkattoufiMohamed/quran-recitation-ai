@@ -1,0 +1,116 @@
+digraph TajweedArchitecture {
+    rankdir=TB;
+    nodesep=0.5;
+    ranksep=0.7;
+    
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    
+    // Input
+    IN [label="Audio Segment\n(2-5 seconds)", shape=cylinder, fillcolor="#FFE5B4"];
+    
+    // Feature Extraction
+    subgraph cluster_feat {
+        label="Feature Extraction";
+        style=filled;
+        color="#E0FFFF";
+        
+        MFCC [label="MFCC Features\n(13 coefficients)", fillcolor="#B0E0E6"];
+        DELTA [label="Delta Features\n(1st & 2nd order)", fillcolor="#B0E0E6"];
+        MEL [label="Mel-Spectrogram\n(128 bins)", fillcolor="#B0E0E6"];
+    }
+    
+    // Al-Mad Model
+    subgraph cluster_mad {
+        label="Al-Mad (Prolongation)";
+        style=filled;
+        color="#FFE4E1";
+        
+        MAD1 [label="LSTM\n(128 units)", fillcolor="#FFC0CB"];
+        MAD2 [label="Dense\n(64 units)", fillcolor="#FFC0CB"];
+        MAD_OUT [label="Binary Output\n(Correct/Wrong)", fillcolor="#FFB6C1"];
+    }
+    
+    // Ghunnah Model
+    subgraph cluster_ghun {
+        label="Ghunnah (Nasal)";
+        style=filled;
+        color="#FFE4E1";
+        
+        GHUN1 [label="LSTM\n(128 units)", fillcolor="#FFC0CB"];
+        GHUN2 [label="Dense\n(64 units)", fillcolor="#FFC0CB"];
+        GHUN_OUT [label="Binary Output\n(Correct/Wrong)", fillcolor="#FFB6C1"];
+    }
+    
+    // Qalqalah Model
+    subgraph cluster_qal {
+        label="Qalqalah (Echo)";
+        style=filled;
+        color="#FFE4E1";
+        
+        QAL1 [label="LSTM\n(128 units)", fillcolor="#FFC0CB"];
+        QAL2 [label="Dense\n(64 units)", fillcolor="#FFC0CB"];
+        QAL_OUT [label="Binary Output\n(Correct/Wrong)", fillcolor="#FFB6C1"];
+    }
+    
+    // Idgham Model
+    subgraph cluster_idg {
+        label="Idgham (Merging)";
+        style=filled;
+        color="#FFE4E1";
+        
+        IDG1 [label="LSTM\n(128 units)", fillcolor="#FFC0CB"];
+        IDG2 [label="Dense\n(64 units)", fillcolor="#FFC0CB"];
+        IDG_OUT [label="Binary Output\n(Correct/Wrong)", fillcolor="#FFB6C1"];
+    }
+    
+    // Ikhfaa Model
+    subgraph cluster_ikh {
+        label="Ikhfaa (Concealment)";
+        style=filled;
+        color="#FFE4E1";
+        
+        IKH1 [label="LSTM\n(128 units)", fillcolor="#FFC0CB"];
+        IKH2 [label="Dense\n(64 units)", fillcolor="#FFC0CB"];
+        IKH_OUT [label="Binary Output\n(Correct/Wrong)", fillcolor="#FFB6C1"];
+    }
+    
+    // Aggregation
+    AGG [label="Results Aggregation\n& Error Localization", fillcolor="#DDA0DD"];
+    
+    // Output
+    OUT [label="Tajweed Report\n(Rule-by-Rule)", shape=note, fillcolor="#90EE90"];
+    
+    // Connections
+    IN -> MFCC;
+    IN -> MEL;
+    MFCC -> DELTA;
+    
+    DELTA -> MAD1;
+    DELTA -> GHUN1;
+    MEL -> QAL1;
+    DELTA -> IDG1;
+    MEL -> IKH1;
+    
+    MAD1 -> MAD2;
+    MAD2 -> MAD_OUT;
+    
+    GHUN1 -> GHUN2;
+    GHUN2 -> GHUN_OUT;
+    
+    QAL1 -> QAL2;
+    QAL2 -> QAL_OUT;
+    
+    IDG1 -> IDG2;
+    IDG2 -> IDG_OUT;
+    
+    IKH1 -> IKH2;
+    IKH2 -> IKH_OUT;
+    
+    MAD_OUT -> AGG;
+    GHUN_OUT -> AGG;
+    QAL_OUT -> AGG;
+    IDG_OUT -> AGG;
+    IKH_OUT -> AGG;
+    
+    AGG -> OUT;
+}

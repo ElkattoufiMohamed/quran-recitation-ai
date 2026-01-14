@@ -5,7 +5,6 @@ from typing import Iterable
 
 import soundfile as sf
 from datasets import load_dataset
-from datasets.exceptions import DatasetNotFoundError
 
 
 def _infer_field(sample: dict, candidates: Iterable[str]) -> str:
@@ -47,17 +46,7 @@ def main() -> None:
     ap.add_argument("--text_field", type=str, default="text")
     args = ap.parse_args()
 
-    try:
-        ds = load_dataset(args.dataset, args.config, split=args.split)
-    except DatasetNotFoundError as exc:
-        raise SystemExit(
-            "Dataset not found on the Hugging Face Hub. "
-            "Double-check the dataset name/config or search with:\n"
-            "  python - <<'PY'\n"
-            "  from datasets import list_datasets\n"
-            "  print([d for d in list_datasets() if 'everyayah' in d.lower()])\n"
-            "  PY"
-        ) from exc
+    ds = load_dataset(args.dataset, args.config, split=args.split)
     if args.seed is not None:
         ds = ds.shuffle(seed=args.seed)
 

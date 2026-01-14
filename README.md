@@ -17,15 +17,6 @@ No API / frontend included.
      --split train \
      --limit 8
    ```
-   - Replace the dataset/config values with the actual EveryAyah dataset you want.
-   - To discover available datasets/configs, you can run:
-     ```bash
-     python - <<'PY'
-     from datasets import list_datasets
-     print([d for d in list_datasets() if "everyayah" in d.lower()])
-     PY
-     ```
-   - Do **not** include angle brackets in your command; they are placeholders.
 2. Split into train/dev:
    ```bash
    python scripts/make_splits.py --in_manifest data/processed/everyayah_subset.jsonl

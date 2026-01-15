@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Iterable
 
 import soundfile as sf
-from datasets import load_dataset
+from datasets import load_dataset, Audio
 from datasets.exceptions import DatasetNotFoundError
 
 
@@ -24,6 +24,9 @@ def _normalize_text(value) -> str:
 
 
 def _write_audio(audio, out_path: Path) -> None:
+    if isinstance(audio, dict) and "bytes" in audio and audio["bytes"] is not None:
+        out_path.write_bytes(audio["bytes"])
+        return
     if isinstance(audio, dict) and "array" in audio:
         sf.write(out_path, audio["array"], audio["sampling_rate"])
         return
@@ -60,6 +63,9 @@ def main() -> None:
             "  PY\n"
             f"Requested dataset: {args.dataset}"
         ) from exc
+    if args.streaming:
+        if args.audio_field in ds.features:
+            ds = ds.cast_column(args.audio_field, Audio(decode=False))
     if args.seed is not None and not args.streaming:
         ds = ds.shuffle(seed=args.seed)
 
@@ -74,14 +80,7 @@ def main() -> None:
     if args.streaming:
         iterator = iter(ds)
         for idx in range(limit):
-            try:
-                sample = next(iterator)
-            except ImportError as exc:
-                raise SystemExit(
-                    "Streaming audio decoding requires 'torchcodec'. "
-                    "Install it with:\n"
-                    "  pip install torchcodec"
-                ) from exc
+            sample = next(iterator)
             audio_field = args.audio_field
             text_field = args.text_field
 

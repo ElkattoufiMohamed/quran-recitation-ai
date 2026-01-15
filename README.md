@@ -20,7 +20,7 @@ No API / frontend included.
      --streaming
    ```
    - You can omit `--dataset` to use the default (`tarteel-ai/everyayah`).
-   - Use `--streaming` to avoid downloading large shards.
+   - Use `--streaming` to avoid downloading large shards (audio is fetched as raw bytes).
    - If you want another dataset/config, you can pass:
    ```bash
    python scripts/download_everyayah_subset.py \

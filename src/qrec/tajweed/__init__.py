@@ -3,4 +3,5 @@ __all__ = [
     "features",
     "detectors",
     "pipeline",
+    "feedback",
 ]

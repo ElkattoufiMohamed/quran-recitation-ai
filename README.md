@@ -96,3 +96,22 @@ python train_tajweed.py \
   --dev_manifest data/processed/dev.jsonl \
   --rule_name al_mad
 ```
+
+### Train a tajweed LSTM classifier (MFCC + delta)
+
+```bash
+python train_tajweed_lstm.py \
+  --train_manifest data/processed/train.jsonl \
+  --dev_manifest data/processed/dev.jsonl \
+  --rule_name al_mad
+```
+
+### Simple feedback formatting
+
+Use the verification pipeline output to build user-facing feedback:
+```python
+from src.qrec.tajweed.feedback import format_tajweed_feedback
+
+feedback = format_tajweed_feedback(results)
+print(feedback)
+```

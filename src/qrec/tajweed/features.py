@@ -102,8 +102,8 @@ class TajweedFeatureExtractor:
     def extract_all_features(
         self,
         audio: str | Path | np.ndarray | torch.Tensor,
-        rule: TajweedRule,
-    ) -> Dict[str, torch.Tensor | float | TajweedRule]:
+        rule: TajweedRule | None,
+    ) -> Dict[str, torch.Tensor | float | TajweedRule | None]:
         if isinstance(audio, (str, Path)):
             wav = self.load_audio(audio)
         else:

@@ -4,3 +4,5 @@ tqdm
 pyyaml
 numpy
 soundfile
+datasets>=2.18
+torchcodec

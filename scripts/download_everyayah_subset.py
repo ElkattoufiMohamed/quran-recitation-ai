@@ -74,7 +74,14 @@ def main() -> None:
     if args.streaming:
         iterator = iter(ds)
         for idx in range(limit):
-            sample = next(iterator)
+            try:
+                sample = next(iterator)
+            except ImportError as exc:
+                raise SystemExit(
+                    "Streaming audio decoding requires 'torchcodec'. "
+                    "Install it with:\n"
+                    "  pip install torchcodec"
+                ) from exc
             audio_field = args.audio_field
             text_field = args.text_field
 

@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 
 from .manifests import read_jsonl
 from .tokenizer import CharTokenizer
-from qrec.utils.audio import AudioFeaturizer, get_or_compute_logmel
+from ..utils.audio import AudioFeaturizer, get_or_compute_logmel
 
 
 @dataclass

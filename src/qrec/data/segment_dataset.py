@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import Dataset
 
 from .manifests import read_jsonl
-from qrec.utils.audio import AudioFeaturizer, get_or_compute_logmel
+from ..utils.audio import AudioFeaturizer, get_or_compute_logmel
 
 
 class SegmentDataset(Dataset):

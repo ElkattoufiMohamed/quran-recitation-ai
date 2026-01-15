@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Tuple, Optional
 import torch
 import torchaudio
+import soundfile as sf
 
 
 @dataclass
@@ -40,8 +41,8 @@ class AudioFeaturizer:
         self.amptodb = torchaudio.transforms.AmplitudeToDB(stype="power")
 
     def load_audio(self, path: str | Path) -> torch.Tensor:
-        wav, sr = torchaudio.load(str(path))
-        # mono
+        wav_np, sr = sf.read(str(path), dtype="float32", always_2d=True)
+        wav = torch.from_numpy(wav_np).transpose(0, 1)  # (C, T)
         if wav.size(0) > 1:
             wav = wav.mean(dim=0, keepdim=True)
         if sr != self.cfg.sample_rate:

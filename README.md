@@ -43,6 +43,11 @@ No API / frontend included.
    ```bash
    python scripts/make_splits.py --in_manifest data/processed/everyayah_subset.jsonl
    ```
+   - If you see `ModuleNotFoundError: No module named 'src'`, ensure you run from the repo root
+     and that `src` is importable:
+     ```bash
+     export PYTHONPATH=.
+     ```
 3. Sanity check and train:
    ```bash
    python scripts/sanity_check.py --manifest data/processed/train.jsonl --kind asr

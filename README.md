@@ -8,7 +8,8 @@ No API / frontend included.
 
 ## Whisper ASR (Quran transcription)
 
-Use the fine-tuned Whisper model from Tarteel:
+Use the fine-tuned Whisper model from Tarteel (the CLI loads audio via
+`soundfile`, so it does not require ffmpeg):
 
 ```bash
 python scripts/transcribe_whisper.py --audio /path/to/audio.wav

@@ -2,6 +2,8 @@ import argparse
 import sys
 from pathlib import Path
 
+import soundfile as sf
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -16,7 +18,14 @@ def main() -> None:
     ap.add_argument("--device", type=str, default=None)
     args = ap.parse_args()
 
-    text = transcribe_audio(args.audio, model_id=args.model_id, device=args.device)
+    audio, sr = sf.read(args.audio, dtype="float32")
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1)
+    text = transcribe_audio(
+        {"array": audio, "sampling_rate": sr},
+        model_id=args.model_id,
+        device=args.device,
+    )
     print("Transcription:")
     print(text)
 

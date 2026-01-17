@@ -14,7 +14,7 @@ def load_whisper_pipeline(model_id: str = DEFAULT_MODEL_ID, device: Optional[str
     torch_dtype = torch.float16 if device == "cuda" else torch.float32
 
     processor = AutoProcessor.from_pretrained(model_id)
-    model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, torch_dtype=torch_dtype)
+    model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, dtype=torch_dtype)
     model.to(device)
 
     return pipeline(
@@ -26,7 +26,7 @@ def load_whisper_pipeline(model_id: str = DEFAULT_MODEL_ID, device: Optional[str
     )
 
 
-def transcribe_audio(audio_path: str, model_id: str = DEFAULT_MODEL_ID, device: Optional[str] = None) -> str:
+def transcribe_audio(audio_input, model_id: str = DEFAULT_MODEL_ID, device: Optional[str] = None) -> str:
     asr = load_whisper_pipeline(model_id=model_id, device=device)
-    result = asr(audio_path)
+    result = asr(audio_input)
     return result["text"]

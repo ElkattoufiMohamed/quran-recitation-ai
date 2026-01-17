@@ -22,7 +22,8 @@ def main() -> None:
     if audio.ndim > 1:
         audio = audio.mean(axis=1)
     text = transcribe_audio(
-        {"array": audio, "sampling_rate": sr},
+        audio,
+        sampling_rate=sr,
         model_id=args.model_id,
         device=args.device,
     )

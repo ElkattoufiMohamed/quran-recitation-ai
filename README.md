@@ -14,6 +14,12 @@ Use the fine-tuned Whisper model from Tarteel:
 python scripts/transcribe_whisper.py --audio /path/to/audio.wav
 ```
 
+If you run into `ModuleNotFoundError: No module named 'src'`, ensure the repo
+root is on `PYTHONPATH`:
+```bash
+export PYTHONPATH=.
+```
+
 The script prints the transcription and uses `tarteel-ai/whisper-tiny-ar-quran`
 by default. You can override the model with `--model_id`.
 

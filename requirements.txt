@@ -4,4 +4,6 @@ tqdm
 pyyaml
 numpy
 soundfile
-datasets>=2.18
+transformers>=4.38
+accelerate
+sentencepiece

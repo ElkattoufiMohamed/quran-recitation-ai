@@ -37,7 +37,10 @@ def transcribe_with_word_timestamps(
 ) -> tuple[str, List[WordTimestamp]]:
     processor, model, device = load_whisper_model(model_id=model_id, device=device)
     if getattr(model.generation_config, "no_timestamps_token_id", None) is None:
-        model.generation_config.no_timestamps_token_id = processor.tokenizer.no_timestamps_token_id
+        token_id = getattr(model.config, "no_timestamps_token_id", None)
+        if token_id is None:
+            token_id = processor.tokenizer.convert_tokens_to_ids("<|notimestamps|>")
+        model.generation_config.no_timestamps_token_id = token_id
     inputs = processor(
         audio_array,
         sampling_rate=sampling_rate,

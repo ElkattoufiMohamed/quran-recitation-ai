@@ -24,6 +24,18 @@ export PYTHONPATH=.
 The script prints the transcription and uses `tarteel-ai/whisper-tiny-ar-quran`
 by default. You can override the model with `--model_id`.
 
+### Split transcription into word clips
+
+```bash
+python scripts/segment_words.py \
+  --audio /path/to/audio.wav \
+  --output_dir data/processed/word_clips \
+  --format wav
+```
+
+This writes one clip per word and a `transcription.txt` file in the output
+directory. Use `--format mp3` if you have `ffmpeg` installed.
+
 ## Tajweed rule verification setup
 
 The Tajweed stack includes rule definitions, feature extraction helpers, and

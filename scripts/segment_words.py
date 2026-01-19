@@ -16,6 +16,13 @@ from src.qrec.inference.whisper_word_timestamps import (  # noqa: E402
 )
 
 
+class WordFallback:
+    def __init__(self, word: str, start: float, end: float) -> None:
+        self.word = word
+        self.start = start
+        self.end = end
+
+
 def _safe_word(word: str) -> str:
     word = re.sub(r"\s+", "_", word.strip())
     word = re.sub(r"[^\w\-\u0600-\u06FF]+", "", word)
@@ -69,6 +76,12 @@ def main() -> None:
         model_id=args.model_id,
         device=args.device,
     )
+    if not words:
+        tokens = [tok for tok in text.split() if tok.strip()]
+        if tokens:
+            total_dur = len(audio) / float(sr)
+            step = total_dur / len(tokens)
+            words = [WordFallback(token, i * step, (i + 1) * step) for i, token in enumerate(tokens)]
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

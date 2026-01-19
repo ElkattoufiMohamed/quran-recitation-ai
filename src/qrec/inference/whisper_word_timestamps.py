@@ -57,8 +57,15 @@ def transcribe_with_word_timestamps(
             return_dict_in_generate=True,
         )
 
+    sequences = generated["sequences"] if isinstance(generated, dict) else generated.sequences
+    decoded = processor.batch_decode(
+        sequences,
+        skip_special_tokens=True,
+        output_offsets=True,
+    )[0]
+    decoded_text = decoded.get("text", "").strip()
+
     words: List[WordTimestamp] = []
-    decoded_text = ""
     if isinstance(generated, dict) and "segments" in generated:
         segments = generated.get("segments", [])
         if isinstance(segments, dict):
@@ -66,7 +73,6 @@ def transcribe_with_word_timestamps(
         for segment in segments:
             if not isinstance(segment, dict):
                 continue
-            decoded_text += segment.get("text", "")
             for item in segment.get("words", []):
                 if not isinstance(item, dict):
                     continue
@@ -80,15 +86,7 @@ def transcribe_with_word_timestamps(
                         end=float(item["end"]),
                     )
                 )
-        decoded_text = decoded_text.strip()
     else:
-        sequences = generated["sequences"] if isinstance(generated, dict) else generated.sequences
-        decoded = processor.batch_decode(
-            sequences,
-            skip_special_tokens=True,
-            output_offsets=True,
-        )[0]
-        decoded_text = decoded.get("text", "")
         for offset in decoded.get("offsets", []):
             word = offset.get("text", "").strip()
             if not word:

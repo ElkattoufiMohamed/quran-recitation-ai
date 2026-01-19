@@ -60,9 +60,16 @@ def transcribe_with_word_timestamps(
     words: List[WordTimestamp] = []
     decoded_text = ""
     if isinstance(generated, dict) and "segments" in generated:
-        for segment in generated.get("segments", []):
+        segments = generated.get("segments", [])
+        if isinstance(segments, dict):
+            segments = [segments]
+        for segment in segments:
+            if not isinstance(segment, dict):
+                continue
             decoded_text += segment.get("text", "")
             for item in segment.get("words", []):
+                if not isinstance(item, dict):
+                    continue
                 word = item.get("word", "").strip()
                 if not word:
                     continue

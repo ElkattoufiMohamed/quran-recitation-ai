@@ -47,32 +47,51 @@ def transcribe_with_word_timestamps(
         return_tensors="pt",
     )
     input_features = inputs.input_features.to(device)
+    attention_mask = inputs.attention_mask.to(device) if "attention_mask" in inputs else None
 
     with torch.no_grad():
         generated = model.generate(
             input_features,
+            attention_mask=attention_mask,
             return_timestamps="word",
             return_dict_in_generate=True,
         )
 
-    sequences = generated["sequences"] if isinstance(generated, dict) else generated.sequences
-    decoded = processor.batch_decode(
-        sequences,
-        skip_special_tokens=True,
-        output_offsets=True,
-    )[0]
-
     words: List[WordTimestamp] = []
-    for offset in decoded.get("offsets", []):
-        word = offset.get("text", "").strip()
-        if not word:
-            continue
-        words.append(
-            WordTimestamp(
-                word=word,
-                start=float(offset["start_offset"]),
-                end=float(offset["end_offset"]),
+    decoded_text = ""
+    if isinstance(generated, dict) and "segments" in generated:
+        for segment in generated.get("segments", []):
+            decoded_text += segment.get("text", "")
+            for item in segment.get("words", []):
+                word = item.get("word", "").strip()
+                if not word:
+                    continue
+                words.append(
+                    WordTimestamp(
+                        word=word,
+                        start=float(item["start"]),
+                        end=float(item["end"]),
+                    )
+                )
+        decoded_text = decoded_text.strip()
+    else:
+        sequences = generated["sequences"] if isinstance(generated, dict) else generated.sequences
+        decoded = processor.batch_decode(
+            sequences,
+            skip_special_tokens=True,
+            output_offsets=True,
+        )[0]
+        decoded_text = decoded.get("text", "")
+        for offset in decoded.get("offsets", []):
+            word = offset.get("text", "").strip()
+            if not word:
+                continue
+            words.append(
+                WordTimestamp(
+                    word=word,
+                    start=float(offset["start_offset"]),
+                    end=float(offset["end_offset"]),
+                )
             )
-        )
 
-    return decoded.get("text", ""), words
+    return decoded_text, words

@@ -10,11 +10,11 @@ from ..utils.audio import AudioFeaturizer, get_or_compute_logmel
 
 class SegmentDataset(Dataset):
     """
-    For tajweed/makhraj segment-level training.
+    For tajweed segment-level training.
 
     Manifest item:
       segment_path: str
-      label: int  (tajweed correct/incorrect OR makhraj class id)
+      label: int  (tajweed correct/incorrect)
     """
     def __init__(
         self,

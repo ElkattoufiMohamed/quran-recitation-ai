@@ -55,8 +55,9 @@ def transcribe_with_word_timestamps(
             return_dict_in_generate=True,
         )
 
+    sequences = generated["sequences"] if isinstance(generated, dict) else generated.sequences
     decoded = processor.batch_decode(
-        generated.sequences,
+        sequences,
         skip_special_tokens=True,
         output_offsets=True,
     )[0]

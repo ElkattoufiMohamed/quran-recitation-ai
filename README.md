@@ -34,9 +34,8 @@ python scripts/segment_words.py \
 ```
 
 This writes one clip per word and a `transcription.txt` file in the output
-directory. Use `--format mp3` if you have `ffmpeg` installed. If the model
-does not return word timestamps, the script falls back to splitting the
-transcription text evenly across the audio duration.
+directory. Use `--format mp3` if you have `ffmpeg` installed. If WhisperX
+does not return word timestamps, try a larger `--model_size`.
 
 ## Tajweed rule verification setup
 

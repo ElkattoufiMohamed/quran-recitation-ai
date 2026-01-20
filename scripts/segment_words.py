@@ -73,13 +73,9 @@ def main() -> None:
         compute_type=args.compute_type,
     )
     if not words:
-        tokens = [tok for tok in text.split() if tok.strip()]
-        if tokens:
-            total_dur = len(audio) / float(sr)
-            step = total_dur / len(tokens)
-            words = [
-                WordTimestamp(token, i * step, (i + 1) * step) for i, token in enumerate(tokens)
-            ]
+        raise SystemExit(
+            "WhisperX did not return word timestamps. Try a larger model size or check audio quality."
+        )
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

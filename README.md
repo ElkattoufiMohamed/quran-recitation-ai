@@ -1,18 +1,17 @@
 # Quran Recitation AI (Model-Only)
 
 This repo contains:
-- ASR via a fine-tuned Whisper model for Quran transcription
+- ASR via WhisperX for Quran transcription
 - Tajweed rule classifiers (segment-level audio classification)
 
 No API / frontend included.
 
-## Whisper ASR (Quran transcription)
+## WhisperX ASR (Quran transcription)
 
-Use the fine-tuned Whisper model from Tarteel (the CLI loads audio via
-`soundfile`, so it does not require ffmpeg):
+Use WhisperX for transcription and word-level timestamps:
 
 ```bash
-python scripts/transcribe_whisper.py --audio /path/to/audio.wav
+python scripts/transcribe_whisperx.py --audio /path/to/audio.wav
 ```
 
 If you run into `ModuleNotFoundError: No module named 'src'`, ensure the repo
@@ -21,8 +20,8 @@ root is on `PYTHONPATH`:
 export PYTHONPATH=.
 ```
 
-The script prints the transcription and uses `tarteel-ai/whisper-tiny-ar-quran`
-by default. You can override the model with `--model_id`.
+The script prints the transcription and uses the WhisperX `tiny` model by
+default. You can override the model with `--model_size`.
 
 ### Split transcription into word clips
 
@@ -30,13 +29,13 @@ by default. You can override the model with `--model_id`.
 python scripts/segment_words.py \
   --audio /path/to/audio.wav \
   --output_dir data/processed/word_clips \
-  --format wav
+  --format wav \
+  --model_size tiny
 ```
 
 This writes one clip per word and a `transcription.txt` file in the output
-directory. Use `--format mp3` if you have `ffmpeg` installed. If the model
-does not return word timestamps, the script falls back to splitting the
-transcription text evenly across the audio duration.
+directory. Use `--format mp3` if you have `ffmpeg` installed. If WhisperX
+does not return word timestamps, try a larger `--model_size`.
 
 ## Tajweed rule verification setup
 

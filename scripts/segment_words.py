@@ -11,16 +11,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.qrec.inference.whisper_word_timestamps import (  # noqa: E402
+from src.qrec.inference.whisperx_asr import (  # noqa: E402
+    WordTimestamp,
     transcribe_with_word_timestamps,
 )
-
-
-class WordFallback:
-    def __init__(self, word: str, start: float, end: float) -> None:
-        self.word = word
-        self.start = start
-        self.end = end
 
 
 def _safe_word(word: str) -> str:
@@ -61,7 +55,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Transcribe audio and split into word clips.")
     ap.add_argument("--audio", type=str, required=True)
     ap.add_argument("--output_dir", type=str, required=True)
-    ap.add_argument("--model_id", type=str, default="tarteel-ai/whisper-tiny-ar-quran")
+    ap.add_argument("--model_size", type=str, default="tiny")
+    ap.add_argument("--compute_type", type=str, default="float32")
     ap.add_argument("--device", type=str, default=None)
     ap.add_argument("--format", type=str, default="wav", choices=["wav", "mp3"])
     args = ap.parse_args()
@@ -73,15 +68,14 @@ def main() -> None:
     text, words = transcribe_with_word_timestamps(
         audio,
         sampling_rate=sr,
-        model_id=args.model_id,
         device=args.device,
+        model_size=args.model_size,
+        compute_type=args.compute_type,
     )
     if not words:
-        tokens = [tok for tok in text.split() if tok.strip()]
-        if tokens:
-            total_dur = len(audio) / float(sr)
-            step = total_dur / len(tokens)
-            words = [WordFallback(token, i * step, (i + 1) * step) for i, token in enumerate(tokens)]
+        raise SystemExit(
+            "WhisperX did not return word timestamps. Try a larger model size or check audio quality."
+        )
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

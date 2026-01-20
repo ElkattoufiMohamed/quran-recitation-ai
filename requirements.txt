@@ -4,6 +4,4 @@ tqdm
 pyyaml
 numpy
 soundfile
-transformers>=4.38
-accelerate
-sentencepiece
+whisperx

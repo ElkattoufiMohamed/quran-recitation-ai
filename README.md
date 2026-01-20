@@ -23,6 +23,9 @@ export PYTHONPATH=.
 The script prints the transcription and uses the WhisperX `tiny` model by
 default. You can override the model with `--model_size`.
 
+If you hit `AttributeError: module 'torchaudio' has no attribute 'AudioMetaData'`,
+upgrade torch/torchaudio to 2.2+ (WhisperX requires newer torchaudio).
+
 ### Split transcription into word clips
 
 ```bash

@@ -5,6 +5,7 @@ from typing import List, Optional
 
 import numpy as np
 import torch
+from omegaconf import ListConfig
 import torchaudio
 import whisperx
 
@@ -36,6 +37,8 @@ def transcribe_with_word_timestamps(
 ) -> tuple[str, List[WordTimestamp]]:
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    torch.serialization.add_safe_globals([ListConfig])
 
     if not hasattr(torchaudio, "AudioMetaData"):
         @dataclass

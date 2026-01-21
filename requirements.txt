@@ -1,7 +1,7 @@
-torch>=2.1
-torchaudio>=2.1
+torch>=2.2
+torchaudio>=2.2
 tqdm
 pyyaml
 numpy
 soundfile
-datasets>=2.18
+whisperx

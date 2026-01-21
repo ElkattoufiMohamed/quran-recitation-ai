@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import numpy as np
 import torch
@@ -39,7 +39,7 @@ def transcribe_with_word_timestamps(
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    torch.serialization.add_safe_globals([ListConfig, ContainerMetadata])
+    torch.serialization.add_safe_globals([ListConfig, ContainerMetadata, Any])
 
     if not hasattr(torchaudio, "AudioMetaData"):
         @dataclass

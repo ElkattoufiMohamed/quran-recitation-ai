@@ -37,6 +37,15 @@ def transcribe_with_word_timestamps(
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
+    if not hasattr(torchaudio, "AudioMetaData"):
+        try:
+            from torchaudio._backend.common import AudioMetaData  # type: ignore
+        except Exception as exc:  # pragma: no cover - defensive
+            raise RuntimeError(
+                "torchaudio.AudioMetaData is missing; upgrade torchaudio or install a full build."
+            ) from exc
+        torchaudio.AudioMetaData = AudioMetaData  # type: ignore[attr-defined]
+
     audio_array, sampling_rate = _ensure_sample_rate(audio_array, sampling_rate)
 
     model = whisperx.load_model(model_size, device, compute_type=compute_type)

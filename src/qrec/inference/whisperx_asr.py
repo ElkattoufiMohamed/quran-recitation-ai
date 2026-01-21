@@ -39,7 +39,7 @@ def transcribe_with_word_timestamps(
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    torch.serialization.add_safe_globals([ListConfig, ContainerMetadata, Any])
+    torch.serialization.add_safe_globals([ListConfig, ContainerMetadata, Any, list])
 
     if not hasattr(torchaudio, "AudioMetaData"):
         @dataclass
